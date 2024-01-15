@@ -9,4 +9,4 @@
 ![תמונה של WhatsApp‏ 2024-01-11 בשעה 12 49 32_2c304555](https://github.com/giladjerusalem/Lucky/assets/74672386/9f58340b-1734-4c32-a02c-fcaa25e3f247)
 
 
-https://github.com/giladjerusalem/Lucky/wiki/_new  link to formal-elements
+[https://github.com/giladjerusalem/Lucky/wiki/_new](https://github.com/video-games-course/Lucky/wiki)https://github.com/video-games-course/Lucky/wiki  link to formal-elements
