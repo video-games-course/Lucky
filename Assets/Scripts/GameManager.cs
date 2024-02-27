@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
+    // initialize Players steps arrays 
     private void InitializePlayerSteps()
     {
         RedPlayer_Steps = new int[] { redPlayerI_Steps, redPlayerII_Steps, redPlayerIII_Steps, redPlayerIV_Steps };
@@ -204,7 +204,12 @@ public class GameManager : MonoBehaviour
         YellowPlayer_Steps = new int[] { yellowPlayerI_Steps, yellowPlayerII_Steps, yellowPlayerIII_Steps, yellowPlayerIV_Steps };
         TotalInHouse = new int[] {  totalRedInHouse, totalGreenInHouse, totalBlueInHouse,  totalYellowInHouse };
     }
-
+    /// <summary>
+    /// checks if after player movment his possition is the same possition of another player in the bord , 
+    /// if so the other player will move back to his starting point
+    /// </summary>
+    /// <param name="PlayerNewPosition"></param>
+    /// <param name="playerTurn"></param>
     void CheckCollisions(Vector3 PlayerNewPosition, String playerTurn)
     {
         for (int i = 0; i < RedPlayers.Length; i++)
@@ -357,7 +362,10 @@ public class GameManager : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// determain the place of the dice and in case that any of the players has reached the house with all characters
+    /// his winning screen will be activated
+    /// </summary>
     void InitializeDice()
     {
         //=========== Turning the wining player screen ================
@@ -488,7 +496,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Click on Roll Button on Dice UI
+    // Click on Roll Button on Dice UI 
     public void DiceRoll()
     {
         SoundManagerScript.diceAudioSource.Play();
@@ -498,7 +506,6 @@ public class GameManager : MonoBehaviour
 
         diceRollAnimations[selectDiceNumAnimation - 1].SetActive(true);
        
-       // InitializePlayerSteps();
 
         StartCoroutine("PlayersNotInitialized");
     }
@@ -719,16 +726,21 @@ public class GameManager : MonoBehaviour
     }
 
     //=============================== RED PLAYERS MOVEMENT ===========================================================
-
+    /// <summary>
+    /// All players UI are the same , deals with the player movment across the mapp
+    /// only the Red player is documented but it is the same for all other players
+    /// </summary>
+    /// <param name="index"></param>
     public void RedPlayersUI(int index)
     {
         SoundManagerScript.playerAudioSource.Play();
         deactivatePlayerBorders(RedBorders);
         deactivatePlayerButton(RedButtons);
 
-
+        // if the player steps acording to the dice roll is not bigger the the movement blocks
         if (playerTurn == "RED" && (redMovementBlocks.Count - RedPlayer_Steps[index]) > selectDiceNumAnimation) // 4 > 4
         {
+            // if the player has allrady left the starting point
             if (RedPlayer_Steps[index] > 0)
             {
                 Vector3[] redPlayer_Path = new Vector3[selectDiceNumAnimation];
@@ -776,12 +788,14 @@ public class GameManager : MonoBehaviour
                     iTween.MoveTo(RedPlayers[index], iTween.Hash("position", redPlayer_Path[0], "speed", 125, "time", 2.0f, "easetype", "elastic", "looptype", "none", "oncomplete", "InitializeDice", "oncompletetarget", this.gameObject));
                     RedPos[index] = redPlayer_Path[0];
                 }
+                //after moving check if the player moved to other player possition
                 CheckCollisions(RedPos[index], "RED");
 
 
             }
             else
             {
+                // if the player is still in the starting point and the dice roll is "6"
                 if (selectDiceNumAnimation == 6 && RedPlayer_Steps[index] == 0)
                 {
                     Vector3[] redPlayer_Path = new Vector3[selectDiceNumAnimation];
@@ -835,6 +849,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                // if the dice roll is biger then the player steps left to get to the house 
                 Debug.Log("You need " + (redMovementBlocks.Count - RedPlayer_Steps[index]).ToString() + " to enter into the house.");
                 int count = 0;
                 for (int i = 0; i < RedPlayer_Steps.Length; i++)
@@ -866,10 +881,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// </summary>
-    /// 
+ 
     //==================================== GREEN PLAYERS MOVEMENT =================================================================
 
     public void GreenPlayersUI(int index)
@@ -1017,14 +1029,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// </summary>
-    /// 
-    //==================================== GREEN PLAYERS MOVEMENT =================================================================
+        //==================================== BLUE PLAYERS MOVEMENT =================================================================
 
     public void BluePlayersUI(int index)
     {
@@ -1318,9 +1323,7 @@ public class GameManager : MonoBehaviour
    
         private void Start()
         {
-            InitializePlayerSteps();
-
-   
+        InitializePlayerSteps();
 
         DicePositions = new Transform[] { redDiceRollPos, greenDiceRollPos, blueDiceRollPos, yellowDiceRollPos };
 
@@ -1328,12 +1331,12 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 30;
 
         randoNo = new System.Random();
-
+        //deactivating the dice animations
         for (int i = 0; i < diceRollAnimations.Length; i++)
         {
             diceRollAnimations[i].SetActive(false);
         }
-
+        // initializing the players possition and starting points arrays
         for (int i = 0; i < RedPlayers.Length; i++)
         {
             RedPos[i] = RedPlayers[i].transform.position;
@@ -1356,8 +1359,6 @@ public class GameManager : MonoBehaviour
             YellowBorders[i].SetActive(false);  
         }
         
-
-     
         redScreen.SetActive(false);
         greenScreen.SetActive(false);
         yellowScreen.SetActive(false);
@@ -1410,13 +1411,11 @@ public class GameManager : MonoBehaviour
                 }
 
                 diceRoll.position = redDiceRollPos.position;
-                // keep all players active
                 break;
         }
         Time.timeScale = 1;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
